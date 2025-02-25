@@ -1,9 +1,11 @@
-﻿using ElectronicDiary.Domain.Entities;
+﻿using ElectronicDiary.Application.Interfaces;
+using ElectronicDiary.Domain.Entities;
 using ElectronicDiary.Infrastructure.Data;
+using ElectronicDiary.Infrastructure.Repositories;
+using ElectronicDiary.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Security.Claims;
@@ -77,7 +79,7 @@ namespace ElectronicDiary.WebApi.Extensions
                 });
 
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
+        {
                 {
                     new OpenApiSecurityScheme
                     {
@@ -89,11 +91,19 @@ namespace ElectronicDiary.WebApi.Extensions
                     },
                     new string[] {}
                 }
-            });
+        });
             });
         }
 
-
+        public static void ConfigureApplicationServices(this IServiceCollection services)
+        {
+            services.AddScoped<IStudentRepository, StudentRepository>();
+            services.AddScoped<ITeacherRepository, TeacherRepository>();
+            services.AddScoped<IAssignmentRepository, AssignmentRepository>();
+            services.AddScoped<IGradeRepository, GradeRepository>();
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddSingleton<IEmailService, EmailService>();
+        }
     }
-
 }

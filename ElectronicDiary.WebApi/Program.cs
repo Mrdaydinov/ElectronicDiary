@@ -26,22 +26,16 @@ namespace ElectronicDiary.WebApi
             builder.Services.ConfigureIdentity();
             builder.Services.ConfigureAuthentication(builder.Configuration);
             builder.Services.ConfigureSwagger();
+            builder.Services.ConfigureApplicationServices();
 
-           
 
-            builder.Services.AddScoped<IStudentRepository, StudentRepository>();
-            builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
-            builder.Services.AddScoped<IAssignmentRepository, AssignmentRepository>();
-            builder.Services.AddScoped<IGradeRepository, GradeRepository>();
-            builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
-            builder.Services.AddScoped<IAuthService, AuthService>();
-            builder.Services.AddSingleton<IEmailService, EmailService>();
+            builder.Services.AddHealthChecks()
+                .AddNpgSql(builder.Configuration.GetConnectionString("DefaultConnection")!);
 
             builder.Services.AddAutoMapper(typeof(MappingProfile));
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-
 
 
             var app = builder.Build();
